@@ -43,11 +43,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 npm run build
 npm run start
 ```
-
-## Privacy
-
-This application processes all data locally in your browser. No data is sent to any servers or third parties. Your Instagram data remains completely private.
-
----
-
-Made with ❤️ by Zooch

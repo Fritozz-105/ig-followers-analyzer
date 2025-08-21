@@ -31,11 +31,6 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/webp", "image/avif"],
   },
-
-  // Bundle analyzer for production builds
-  experimental: {
-    optimizeCss: true,
-  },
 };
 
 export default nextConfig;
