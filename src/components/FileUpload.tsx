@@ -34,7 +34,18 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
 
       const usernames = dataArray
         .flatMap((item) => item.string_list_data || [])
-        .map((user) => user?.value)
+        .map((user) => {
+          // Try to get value first, if not available extract from href or title
+          if (user?.value) {
+            return user.value;
+          }
+          // Extract username from href (e.g., "https://www.instagram.com/_u/username" or "https://www.instagram.com/username")
+          if (user?.href) {
+            const match = user.href.match(/instagram\.com\/(?:_u\/)?([^/?]+)/);
+            return match ? match[1] : null;
+          }
+          return null;
+        })
         .filter((value): value is string => typeof value === "string" && value.length > 0);
       return usernames;
     } catch (error) {

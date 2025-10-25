@@ -1,13 +1,13 @@
 export interface InstagramDataItem {
   title: string;
-  media_list_data: Array<{
-    id: string;
-    type: string;
-    url: string;
+  media_list_data?: Array<{
+    id?: string;
+    type?: string;
+    url?: string;
   }>;
   string_list_data: Array<{
     href: string;
-    value: string;
+    value?: string; // Optional because following.json doesn't have it
     timestamp: number;
   }>;
 }
