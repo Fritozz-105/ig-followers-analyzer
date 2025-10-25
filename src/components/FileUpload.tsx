@@ -33,17 +33,25 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
       }
 
       const usernames = dataArray
-        .flatMap((item) => item.string_list_data || [])
-        .map((user) => {
-          // Try to get value first, if not available extract from href or title
-          if (user?.value) {
-            return user.value;
+        .map((item) => {
+          // For following.json: username is in the title field
+          if (item.title && item.title.length > 0) {
+            return item.title;
           }
-          // Extract username from href (e.g., "https://www.instagram.com/_u/username" or "https://www.instagram.com/username")
-          if (user?.href) {
-            const match = user.href.match(/instagram\.com\/(?:_u\/)?([^/?]+)/);
-            return match ? match[1] : null;
+
+          // For followers.json: username is in string_list_data[0].value
+          if (item.string_list_data && item.string_list_data.length > 0) {
+            const firstEntry = item.string_list_data[0];
+            if (firstEntry?.value) {
+              return firstEntry.value;
+            }
+            // Fallback: extract from href if value is missing
+            if (firstEntry?.href) {
+              const match = firstEntry.href.match(/instagram\.com\/(?:_u\/)?([^/?]+)/);
+              return match ? match[1] : null;
+            }
           }
+
           return null;
         })
         .filter((value): value is string => typeof value === "string" && value.length > 0);
