@@ -152,37 +152,39 @@ export default function Results({ followers, following, onReset }: FollowerResul
       {users.length === 0 ? (
         <p className="text-gray-500 text-center py-4">No users in this category</p>
       ) : (
-        users.map((user) => (
-          <div
-            key={user}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3">
-                <span className="text-white text-sm font-semibold">
-                  {user.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="font-medium text-gray-700">@{user}</span>
-            </div>
-            <a
-              href={`https://instagram.com/${user}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`text-sm ${linkColor} hover:underline flex items-center`}
+        users
+          .filter((user) => user && typeof user === "string" && user.length > 0)
+          .map((user) => (
+            <div
+              key={user}
+              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              View
-              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-            </a>
-          </div>
-        ))
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3">
+                  <span className="text-white text-sm font-semibold">
+                    {user.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="font-medium text-gray-700">@{user}</span>
+              </div>
+              <a
+                href={`https://instagram.com/${user}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-sm ${linkColor} hover:underline flex items-center`}
+              >
+                View
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+            </div>
+          ))
       )}
     </div>
   );

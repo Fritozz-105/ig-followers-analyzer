@@ -27,11 +27,20 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
         dataArray = followingData.relationships_following;
       }
 
+      // Check if dataArray exists and is an array
+      if (!Array.isArray(dataArray)) {
+        throw new Error("Invalid data format in JSON file");
+      }
+
       const usernames = dataArray
-        .flatMap((item) => item.string_list_data)
-        .map((user) => user.value);
+        .flatMap((item) => item.string_list_data || [])
+        .map((user) => user?.value)
+        .filter((value): value is string => typeof value === "string" && value.length > 0);
       return usernames;
-    } catch {
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
       throw new Error("Invalid JSON format");
     }
   };
