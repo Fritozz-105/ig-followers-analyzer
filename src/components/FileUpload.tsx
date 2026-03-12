@@ -108,11 +108,17 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
     }
   };
 
+  const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB limit
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type !== "application/zip" && !file.name.endsWith(".zip")) {
         setError("Please select a ZIP file containing your Instagram data");
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setError("File is too large. Please upload a ZIP file smaller than 500MB.");
         return;
       }
       setZipFile(file);

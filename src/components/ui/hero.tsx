@@ -140,9 +140,10 @@ export const PremiumHero = ({ onGetStarted }: HeroProps) => {
         drawBeam(beam);
       });
 
-      generateNoise();
       animationFrameRef.current = requestAnimationFrame(animate);
     };
+
+    generateNoise();
     animate();
 
     return () => {

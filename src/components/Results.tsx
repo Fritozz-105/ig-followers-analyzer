@@ -1,21 +1,35 @@
 "use client";
 
+import { useMemo } from "react";
 import { FollowerResultsProps } from "@/types";
 import { RotateCcw, X, Heart, Users, ArrowRight } from "lucide-react";
 
 export default function Results({ followers, following, onReset }: FollowerResultsProps) {
-  const followersSet = new Set(followers);
-  const followingSet = new Set(following);
+  const followersSet = useMemo(() => new Set(followers), [followers]);
+  const followingSet = useMemo(() => new Set(following), [following]);
 
-  const notFollowingBack = following.filter((user) => !followersSet.has(user));
-  const notFollowing = followers.filter((user) => !followingSet.has(user));
-  const mutualFollows = following.filter((user) => followersSet.has(user));
+  const notFollowingBack = useMemo(
+    () => following.filter((user) => !followersSet.has(user)),
+    [following, followersSet]
+  );
+  const notFollowing = useMemo(
+    () => followers.filter((user) => !followingSet.has(user)),
+    [followers, followingSet]
+  );
+  const mutualFollows = useMemo(
+    () => following.filter((user) => followersSet.has(user)),
+    [following, followersSet]
+  );
 
   const followBackRate = following.length > 0
     ? ((mutualFollows.length / following.length) * 100).toFixed(1)
     : "0.0";
 
-  const generateDynamicInsights = () => {
+  const sanitizeUsername = (username: string): string => {
+    return username.replace(/[^a-zA-Z0-9._]/g, "");
+  };
+
+  const dynamicInsights = useMemo(() => {
     const mutualCount = mutualFollows.length;
     let mutualInsight = "";
     if (mutualCount === 0) {
@@ -44,7 +58,7 @@ export default function Results({ followers, following, onReset }: FollowerResul
       unbalancedInsight = `${unbalancedCount} unbalanced follows — significant cleanup recommended`;
     }
 
-    const ratio = followers.length / following.length;
+    const ratio = following.length > 0 ? followers.length / following.length : 0;
     let ratioInsight = "";
     if (ratio > 2) {
       ratioInsight = "Strong influence — significantly more followers than following";
@@ -76,9 +90,7 @@ export default function Results({ followers, following, onReset }: FollowerResul
       { color: "blue", title: "Follow Ratio", description: ratioInsight },
       { color: "green", title: "Engagement Potential", description: potentialInsight },
     ];
-  };
-
-  const dynamicInsights = generateDynamicInsights();
+  }, [mutualFollows, notFollowingBack, notFollowing, followers.length, following.length]);
 
   const UserList = ({ users, accentColor }: { users: string[]; accentColor: string }) => (
     <div className="space-y-1.5">
@@ -87,9 +99,9 @@ export default function Results({ followers, following, onReset }: FollowerResul
       ) : (
         users
           .filter((user) => user && typeof user === "string" && user.length > 0)
-          .map((user) => (
+          .map((user, index) => (
             <div
-              key={user}
+              key={`${user}-${index}`}
               className="flex items-center justify-between px-3 py-2.5 bg-white/[0.02] rounded-lg hover:bg-white/[0.04] transition-colors group"
             >
               <div className="flex items-center gap-2.5 min-w-0">
@@ -101,7 +113,7 @@ export default function Results({ followers, following, onReset }: FollowerResul
                 <span className="text-zinc-300 text-xs font-mono truncate">@{user}</span>
               </div>
               <a
-                href={`https://instagram.com/${user}`}
+                href={`https://instagram.com/${sanitizeUsername(user)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex items-center gap-1 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity ${accentColor} flex-shrink-0 ml-2`}
