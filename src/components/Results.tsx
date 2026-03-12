@@ -10,20 +10,19 @@ export default function Results({ followers, following, onReset }: FollowerResul
 
   const notFollowingBack = useMemo(
     () => following.filter((user) => !followersSet.has(user)),
-    [following, followersSet]
+    [following, followersSet],
   );
   const notFollowing = useMemo(
     () => followers.filter((user) => !followingSet.has(user)),
-    [followers, followingSet]
+    [followers, followingSet],
   );
   const mutualFollows = useMemo(
     () => following.filter((user) => followersSet.has(user)),
-    [following, followersSet]
+    [following, followersSet],
   );
 
-  const followBackRate = following.length > 0
-    ? ((mutualFollows.length / following.length) * 100).toFixed(1)
-    : "0.0";
+  const followBackRate =
+    following.length > 0 ? ((mutualFollows.length / following.length) * 100).toFixed(1) : "0.0";
 
   const sanitizeUsername = (username: string): string => {
     return username.replace(/[^a-zA-Z0-9._]/g, "");
@@ -95,17 +94,19 @@ export default function Results({ followers, following, onReset }: FollowerResul
   const UserList = ({ users, accentColor }: { users: string[]; accentColor: string }) => (
     <div className="space-y-1.5">
       {users.length === 0 ? (
-        <p className="text-zinc-600 text-xs text-center py-6 font-mono">No users in this category</p>
+        <p className="text-zinc-600 text-xs text-center py-6 font-mono">
+          No users in this category
+        </p>
       ) : (
         users
           .filter((user) => user && typeof user === "string" && user.length > 0)
           .map((user, index) => (
             <div
               key={`${user}-${index}`}
-              className="flex items-center justify-between px-3 py-2.5 bg-white/[0.02] rounded-lg hover:bg-white/[0.04] transition-colors group"
+              className="flex items-center justify-between px-3 py-2.5 bg-white/2 rounded-lg hover:bg-white/4 transition-colors group"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
                   <span className="text-zinc-400 text-xs font-bold">
                     {user.charAt(0).toUpperCase()}
                   </span>
@@ -116,7 +117,7 @@ export default function Results({ followers, following, onReset }: FollowerResul
                 href={`https://instagram.com/${sanitizeUsername(user)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-1 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity ${accentColor} flex-shrink-0 ml-2`}
+                className={`flex items-center gap-1 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity ${accentColor} shrink-0 ml-2`}
               >
                 View
                 <ArrowRight className="w-3 h-3" />
@@ -161,7 +162,7 @@ export default function Results({ followers, following, onReset }: FollowerResul
         ].map(({ label, value, color }) => (
           <div
             key={label}
-            className="bg-[#111113] border border-white/[0.06] rounded-xl p-5 text-center"
+            className="bg-[#111113] border border-white/6 rounded-xl p-5 text-center"
           >
             <div className={`text-2xl font-black ${color} mb-1`}>{value}</div>
             <div className="text-zinc-600 text-xs font-mono tracking-wider">{label}</div>
@@ -172,8 +173,8 @@ export default function Results({ followers, following, onReset }: FollowerResul
       {/* Detailed Results */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Not Following Back */}
-        <div className="bg-[#111113] rounded-xl border border-white/[0.06] border-l-2 border-l-red-500/50 overflow-hidden">
-          <div className="p-5 border-b border-white/[0.05]">
+        <div className="bg-[#111113] rounded-xl border border-white/6 p-5 text-center">
+          <div className="p-5 border-b border-white/5">
             <div className="flex items-center gap-3 mb-1">
               <X className="w-4 h-4 text-red-400" />
               <h3 className="text-sm font-bold text-white tracking-tight">Not Following Back</h3>
@@ -186,8 +187,8 @@ export default function Results({ followers, following, onReset }: FollowerResul
         </div>
 
         {/* Mutual Follows */}
-        <div className="bg-[#111113] rounded-xl border border-white/[0.06] border-l-2 border-l-emerald-500/50 overflow-hidden">
-          <div className="p-5 border-b border-white/[0.05]">
+        <div className="bg-[#111113] rounded-xl border border-white/6 p-5 text-center">
+          <div className="p-5 border-b border-white/5">
             <div className="flex items-center gap-3 mb-1">
               <Heart className="w-4 h-4 text-emerald-400" />
               <h3 className="text-sm font-bold text-white tracking-tight">Mutual Follows</h3>
@@ -200,11 +201,13 @@ export default function Results({ followers, following, onReset }: FollowerResul
         </div>
 
         {/* Fans */}
-        <div className="bg-[#111113] rounded-xl border border-white/[0.06] border-l-2 border-l-cyan-500/50 overflow-hidden">
-          <div className="p-5 border-b border-white/[0.05]">
+        <div className="bg-[#111113] rounded-xl border border-white/6 p-5 text-center">
+          <div className="p-5 border-b border-white/5">
             <div className="flex items-center gap-3 mb-1">
               <Users className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-bold text-white tracking-tight">Fans (Not Following Back)</h3>
+              <h3 className="text-sm font-bold text-white tracking-tight">
+                Fans (Not Following Back)
+              </h3>
             </div>
             <p className="text-2xl font-black text-cyan-400 ml-7">{notFollowing.length}</p>
           </div>
@@ -215,13 +218,13 @@ export default function Results({ followers, following, onReset }: FollowerResul
       </div>
 
       {/* Insights */}
-      <div className="bg-[#111113] rounded-xl border border-white/[0.06] p-6">
+      <div className="bg-[#111113] rounded-xl border border-white/6 p-6">
         <p className="text-xs font-mono text-zinc-600 tracking-widest mb-5">— INSIGHTS —</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {dynamicInsights.map((insight, index) => (
             <div key={index} className="flex items-start gap-3">
               <span
-                className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${insightDotColor[insight.color]}`}
+                className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${insightDotColor[insight.color]}`}
               />
               <div>
                 <p className="font-bold text-zinc-300 text-xs tracking-wide mb-0.5">

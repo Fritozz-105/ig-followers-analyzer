@@ -12,7 +12,7 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
 
   const parseInstagramJSON = async (
     jsonContent: string,
-    isFollowersFile: boolean = false
+    isFollowersFile: boolean = false,
   ): Promise<string[]> => {
     try {
       const json = JSON.parse(jsonContent);
@@ -60,7 +60,7 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
   };
 
   const extractDataFromZip = async (
-    file: File
+    file: File,
   ): Promise<{ followers: string[]; following: string[] }> => {
     const zip = new JSZip();
     const zipData = await zip.loadAsync(file);
@@ -70,13 +70,13 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
 
     if (!followersFile || followersFile.length === 0) {
       throw new Error(
-        "Could not find followers_1.json in connections/followers_and_following/ folder"
+        "Could not find followers_1.json in connections/followers_and_following/ folder",
       );
     }
 
     if (!followingFile || followingFile.length === 0) {
       throw new Error(
-        "Could not find following.json in connections/followers_and_following/ folder"
+        "Could not find following.json in connections/followers_and_following/ folder",
       );
     }
 
@@ -139,11 +139,11 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
                 type="file"
                 accept=".zip"
                 onChange={handleFileChange}
-                className="w-full p-4 border border-dashed border-white/[0.08] rounded-lg bg-white/[0.02] text-zinc-500 text-xs font-mono hover:border-cyan-400/30 hover:bg-white/[0.04] focus:outline-none transition-all cursor-pointer file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-mono file:font-semibold file:bg-white/5 file:text-zinc-400 hover:file:bg-cyan-400/10 hover:file:text-cyan-400 file:cursor-pointer"
+                className="w-full p-4 border border-dashed border-white/8 rounded-lg bg-white/2 text-zinc-500 text-xs font-mono hover:border-cyan-400/30 hover:bg-white/4 focus:outline-none transition-all cursor-pointer file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-mono file:font-semibold file:bg-white/5 file:text-zinc-400 hover:file:bg-cyan-400/10 hover:file:text-cyan-400 file:cursor-pointer"
               />
               {zipFile && (
                 <div className="mt-2.5 flex items-center gap-2 text-xs text-cyan-400 font-mono">
-                  <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   {zipFile.name} · {Math.round(zipFile.size / 1024)} KB
                 </div>
               )}
@@ -155,7 +155,7 @@ export default function FileUpload({ onDataParsed }: FileUploadProps) {
 
           {error && (
             <div className="p-4 bg-red-500/5 border border-red-500/15 text-red-400 rounded-lg flex items-start gap-3">
-              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
               <span className="text-xs font-mono leading-relaxed">{error}</span>
             </div>
           )}
