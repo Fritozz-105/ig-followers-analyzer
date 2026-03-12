@@ -1,17 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import FileUpload from "@/components/FileUpload";
 import Results from "@/components/Results";
 import InstructionsModal from "@/components/InstructionsModal";
+import { PremiumHero } from "@/components/ui/hero";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { howItWorksSteps } from "@/data/howItWorks";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [data, setData] = useState<{ followers: string[]; following: string[] } | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const uploadRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if user has visited before
     const hasVisited = localStorage.getItem("ig-analyzer-visited");
     if (!hasVisited) {
       setShowModal(true);
@@ -31,58 +34,91 @@ export default function Home() {
     localStorage.setItem("ig-analyzer-visited", "true");
   };
 
-  const handleViewDetailedInstructions = () => {
-    setShowModal(true);
+  const handleGetStarted = () => {
+    uploadRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
       <InstructionsModal isOpen={showModal} onClose={handleModalClose} />
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
-        <div className="container mx-auto px-4 py-12">
-          {!data ? (
-            <div className="max-w-6xl mx-auto text-center">
-              <div className="mb-12">
-                <h1 className="text-5xl font-bold text-gray-800 mb-4">
-                  Zooch IG Follower
-                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Analyzer
-                  </span>
-                </h1>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Discover who follows you back, find mutual connections, and get insights into your
-                  Instagram network
+
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.05] bg-[#09090b]/80 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+          <span className="font-black text-white text-sm tracking-widest font-mono">ZOOCH.IG</span>
+          <button
+            onClick={() => setShowModal(true)}
+            className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono tracking-widest cursor-pointer"
+          >
+            HOW TO EXPORT
+          </button>
+        </div>
+      </nav>
+
+      {!data ? (
+        <div className="bg-[#09090b] min-h-screen">
+          {/* Hero */}
+          <PremiumHero onGetStarted={handleGetStarted} />
+
+          {/* Upload Section */}
+          <div ref={uploadRef} className="relative py-28 px-4 overflow-hidden">
+            <AnimatedGridPattern
+              numSquares={40}
+              maxOpacity={0.04}
+              duration={4}
+              className={cn(
+                "[mask-image:radial-gradient(700px_circle_at_center,white,transparent)]",
+                "inset-x-0 inset-y-0 h-full text-zinc-700"
+              )}
+            />
+            <div className="relative z-10 max-w-md mx-auto">
+              <div className="text-center mb-10">
+                <p className="text-xs font-mono text-zinc-600 tracking-widest mb-3">— STEP 01 —</p>
+                <h2 className="text-3xl font-black text-white tracking-tight">Upload Your ZIP</h2>
+                <p className="text-zinc-600 text-xs mt-3 font-mono leading-relaxed">
+                  Drop in the export file from Instagram — we handle the rest.
                 </p>
               </div>
               <FileUpload onDataParsed={handleDataParsed} />
-              <div className="mt-12 max-w-4xl mx-auto">
-                <h3 className="text-2xl font-bold text-gray-800 mb-8">How it works</h3>
-                <div className="grid md:grid-cols-3 gap-8">
-                  {howItWorksSteps.map((step) => (
-                    <div key={step.id} className="bg-white rounded-xl p-6 shadow-lg">
-                      <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-purple-600 font-bold text-lg">{step.id}</span>
-                      </div>
-                      <h4 className="font-semibold text-gray-800 mb-2">{step.title}</h4>
-                      <p className="text-gray-600 text-sm">{step.description}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8 text-center">
-                  <button
-                    onClick={handleViewDetailedInstructions}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div className="relative py-28 px-4 border-t border-white/[0.04]">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-16">
+                <p className="text-xs font-mono text-zinc-600 tracking-widest mb-3">— PROCESS —</p>
+                <h2 className="text-3xl font-black text-white tracking-tight">How It Works</h2>
+                <p className="text-zinc-600 text-xs mt-3 font-mono">
+                  Three steps. No account needed. Nothing uploaded.
+                </p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-px bg-white/[0.05] border border-white/[0.05] rounded-xl overflow-hidden">
+                {howItWorksSteps.map((step) => (
+                  <div
+                    key={step.id}
+                    className="bg-[#09090b] p-8 hover:bg-[#0d0d0f] transition-colors group"
                   >
-                    View Detailed Instructions
-                  </button>
-                </div>
+                    <p className="text-xs font-mono text-cyan-400 tracking-widest mb-5 group-hover:text-cyan-300 transition-colors">
+                      0{step.id}
+                    </p>
+                    <h4 className="font-bold text-white text-base mb-3 tracking-tight">
+                      {step.title}
+                    </h4>
+                    <p className="text-zinc-600 text-xs leading-relaxed font-mono">
+                      {step.description}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-          ) : (
-            <Results followers={data.followers} following={data.following} onReset={handleReset} />
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-[#09090b] min-h-screen pt-14">
+          <Results followers={data.followers} following={data.following} onReset={handleReset} />
+        </div>
+      )}
     </>
   );
 }
