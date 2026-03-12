@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { modalContent } from "@/data/modalContent";
+import { ShieldCheck, AlertTriangle, CheckCircle2, Loader2, X } from "lucide-react";
 
 interface InstructionsModalProps {
   isOpen: boolean;
@@ -38,73 +39,70 @@ export default function InstructionsModal({ isOpen, onClose }: InstructionsModal
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center p-4">
         {/* Backdrop */}
-        <div className="fixed inset-0 bg-slate-850/50 backdrop-blur-sm bg-opacity-50 transition-opacity"></div>
+        <div
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+          onClick={canClose ? onClose : undefined}
+        />
 
         {/* Modal */}
-        <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all">
+        <div className="relative bg-[#111113] border border-white/[0.08] rounded-xl shadow-2xl max-w-2xl w-full mx-4">
+          {/* Close button (only when canClose) */}
+          {canClose && (
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 text-zinc-600 hover:text-zinc-300 transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+
           <div className="p-8">
             {/* Header */}
-            <div className="text-center mb-6">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <svg
-                  className="w-10 h-10 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">{modalContent.header.title}</h2>
-              <p className="text-gray-600">{modalContent.header.subtitle}</p>
+            <div className="mb-8">
+              <p className="text-xs font-mono text-zinc-600 tracking-widest mb-3">— INSTRUCTIONS —</p>
+              <h2 className="text-2xl font-black text-white tracking-tight mb-1">
+                {modalContent.header.title}
+              </h2>
+              <p className="text-zinc-600 text-xs font-mono">{modalContent.header.subtitle}</p>
             </div>
 
             {/* Privacy Notice */}
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center mb-2">
-                <svg
-                  className="w-5 h-5 text-green-600 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="font-semibold text-green-800">
-                  {modalContent.privacyNotice.title}
+            <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4 mb-6">
+              <div className="flex items-center gap-2.5 mb-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <span className="font-bold text-emerald-400 text-xs tracking-wide">
+                  {modalContent.privacyNotice.title.toUpperCase()}
                 </span>
               </div>
-              <p className="text-green-700 text-sm">{modalContent.privacyNotice.description}</p>
+              <p className="text-zinc-500 text-xs font-mono leading-relaxed pl-6">
+                {modalContent.privacyNotice.description}
+              </p>
             </div>
 
             {/* Instructions */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-gray-800">{modalContent.instructions.title}</h3>
+            <div className="space-y-1 mb-6">
+              <p className="text-xs font-mono text-zinc-600 tracking-widest mb-4">
+                {modalContent.instructions.title.toUpperCase()}
+              </p>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {modalContent.instructions.steps.map((step) => (
-                  <div key={step.id} className="flex items-start">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                      <span className="text-purple-600 font-bold text-sm">{step.id}</span>
+                  <div key={step.id} className="flex items-start gap-4">
+                    <div className="w-6 h-6 rounded border border-cyan-400/30 bg-cyan-400/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-cyan-400 font-black text-xs">{step.id}</span>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-1">{step.title}</h4>
-                      <p className="text-gray-600 text-sm">
+                    <div className="flex-1">
+                      <h4 className="font-bold text-zinc-300 text-xs tracking-wide mb-0.5">
+                        {step.title.toUpperCase()}
+                      </h4>
+                      <p className="text-zinc-600 text-xs font-mono leading-relaxed">
                         {step.description}
                         {step.codeSnippets && (
                           <>
                             {" "}
                             {step.codeSnippets.map((snippet, index) => (
                               <span key={snippet}>
-                                <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                                <code className="bg-white/[0.04] border border-white/[0.07] px-1.5 py-0.5 rounded text-cyan-400 font-mono">
                                   {snippet}
                                 </code>
                                 {index < step.codeSnippets!.length - 1 && " and "}
@@ -120,75 +118,36 @@ export default function InstructionsModal({ isOpen, onClose }: InstructionsModal
             </div>
 
             {/* Warning */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mt-6">
-              <div className="flex items-center mb-2">
-                <svg
-                  className="w-5 h-5 text-amber-600 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="font-semibold text-amber-800">{modalContent.warning.title}</span>
+            <div className="bg-amber-500/5 border border-amber-500/20 rounded-lg p-4 mb-7">
+              <div className="flex items-center gap-2.5 mb-1.5">
+                <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                <span className="font-bold text-amber-400 text-xs tracking-wide">
+                  {modalContent.warning.title.toUpperCase()}
+                </span>
               </div>
-              <p className="text-amber-700 text-sm">{modalContent.warning.description}</p>
+              <p className="text-zinc-500 text-xs font-mono leading-relaxed pl-6">
+                {modalContent.warning.description}
+              </p>
             </div>
 
             {/* Close Button */}
-            <div className="flex justify-center mt-8">
-              <button
-                onClick={onClose}
-                disabled={!canClose}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-8 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-lg flex items-center"
-              >
-                {!canClose ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    {modalContent.buttons.waiting} ({countdown}s)
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-5 h-5 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    {modalContent.buttons.ready}
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              onClick={onClose}
+              disabled={!canClose}
+              className="w-full bg-cyan-400 text-black py-3 px-6 rounded-lg font-bold text-xs tracking-widest hover:bg-cyan-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {!canClose ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {modalContent.buttons.waiting} ({countdown}s)
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  {modalContent.buttons.ready.toUpperCase()}
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>
